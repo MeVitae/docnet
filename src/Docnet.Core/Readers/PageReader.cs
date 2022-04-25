@@ -95,6 +95,20 @@ namespace Docnet.Core.Readers
         }
 
         /// <inheritdoc />
+        public IEnumerable<CharacterRef> GetCharacterRefs()
+        {
+            lock (DocLib.Lock)
+            {
+                var charCount = fpdf_text.FPDFTextCountChars(_text);
+
+                for (var i = 0; i < charCount; i++)
+                {
+                    yield return new CharacterRef(_text, i);
+                }
+            }
+        }
+
+        /// <inheritdoc />
         public IEnumerable<Character> GetCharacters()
         {
             lock (DocLib.Lock)
@@ -125,10 +139,19 @@ namespace Docnet.Core.Readers
 
                     var box = new BoundBox(adjustedLeft, adjustedTop, adjustRight, adjustBottom);
 
+                    success = fpdf_text.FPDFTextGetCharOrigin(_text, i, ref left, ref top) == 1;
+
+                    if (!success)
+                    {
+                        continue;
+                    }
+
+                    var origin = new Point(GetAdjustedCoords(width, height, left, top));
+
                     var fontSize = fpdf_text.FPDFTextGetFontSize(_text, i);
                     var angle = fpdf_text.FPDFTextGetCharAngle(_text, i);
 
-                    yield return new Character(charCode, box, angle, fontSize);
+                    yield return new Character(charCode, box, angle, fontSize, origin);
                 }
             }
         }
@@ -154,6 +177,30 @@ namespace Docnet.Core.Readers
             y = AdjustToRange(y, height);
 
             return (x, y);
+        }
+
+        /// <inheritdoc />
+        public Point GetAdjustedPoint(PdfPoint point)
+        {
+            lock (DocLib.Lock)
+            {
+                var width = GetPageWidth();
+                var height = GetPageHeight();
+                return new Point(GetAdjustedCoords(width, height, point.X, point.Y));
+            }
+        }
+
+        /// <inheritdoc />
+        public BoundBox GetAdjustedBox(PdfBoundBox box)
+        {
+            lock (DocLib.Lock)
+            {
+                var width = GetPageWidth();
+                var height = GetPageHeight();
+                var (left, top) = GetAdjustedCoords(width, height, box.Left, box.Top);
+                var (right, bottom) = GetAdjustedCoords(width, height, box.Right, box.Bottom);
+                return new BoundBox(left, top, right, bottom);
+            }
         }
 
         private static int AdjustToRange(int coord, int range)

@@ -28,10 +28,29 @@ namespace Docnet.Core.Readers
         string GetText();
 
         /// <summary>
+        /// Get all page characters refs.
+        /// </summary>
+        IEnumerable<CharacterRef> GetCharacterRefs();
+
+        /// <summary>
         /// Get all page characters with
         /// their bounding boxes.
         /// </summary>
         IEnumerable<Character> GetCharacters();
+
+        /// <summary>
+        /// Convert a PdfPoint, in PDF
+        /// coordinates to Point in pixel
+        /// coordinates.
+        /// </summary>
+        Point GetAdjustedPoint(PdfPoint point);
+
+        /// <summary>
+        /// Convert a PdfBoundBox, in PDF
+        /// coordinates to BoundBox in
+        /// pixel coordinates.
+        /// </summary>
+        BoundBox GetAdjustedBox(PdfBoundBox box);
 
         /// <summary>
         /// Return a byte representation

@@ -2392,6 +2392,17 @@ namespace Docnet.Core.Bindings
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("pdfium", CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "FPDFText_GetLooseCharBox")]
+            internal static extern int FPDFTextGetLooseCharBox(IntPtr text_page, int index, double* left,
+                double* right, double* bottom, double* top);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("pdfium", CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "FPDFText_GetFontWeight")]
+            internal static extern int FPDFTextGetFontWeight(IntPtr text_page, int index);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("pdfium", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "FPDFText_GetCharOrigin")]
             internal static extern int FPDFTextGetCharOrigin(IntPtr text_page, int index, double* x,
                 double* y);
@@ -2537,6 +2548,13 @@ namespace Docnet.Core.Bindings
             return __ret;
         }
 
+        public static int FPDFTextGetFontWeight(FpdfTextpageT text_page, int index)
+        {
+            var __arg0 = ReferenceEquals(text_page, null) ? IntPtr.Zero : text_page.__Instance;
+            var __ret = __Internal.FPDFTextGetFontWeight(__arg0, index);
+            return __ret;
+        }
+
         public static uint FPDFTextGetFontInfo(FpdfTextpageT text_page, int index,
             IntPtr buffer, uint buflen, ref int flags)
         {
@@ -2566,6 +2584,30 @@ namespace Docnet.Core.Bindings
                         {
                             var __arg5 = __refParamPtr5;
                             var __ret = __Internal.FPDFTextGetCharBox(__arg0, index, __arg2, __arg3, __arg4, __arg5);
+                            return __ret;
+                        }
+                    }
+                }
+            }
+        }
+
+        public static int FPDFTextGetLooseCharBox(FpdfTextpageT text_page, int index,
+            ref double left, ref double right, ref double bottom, ref double top)
+        {
+            var __arg0 = ReferenceEquals(text_page, null) ? IntPtr.Zero : text_page.__Instance;
+            fixed (double* __refParamPtr2 = &left)
+            {
+                var __arg2 = __refParamPtr2;
+                fixed (double* __refParamPtr3 = &right)
+                {
+                    var __arg3 = __refParamPtr3;
+                    fixed (double* __refParamPtr4 = &bottom)
+                    {
+                        var __arg4 = __refParamPtr4;
+                        fixed (double* __refParamPtr5 = &top)
+                        {
+                            var __arg5 = __refParamPtr5;
+                            var __ret = __Internal.FPDFTextGetLooseCharBox(__arg0, index, __arg2, __arg3, __arg4, __arg5);
                             return __ret;
                         }
                     }

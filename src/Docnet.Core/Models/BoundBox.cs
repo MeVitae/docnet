@@ -70,4 +70,72 @@ namespace Docnet.Core.Models
             return hashCode;
         }
     }
+
+    public struct PdfBoundBox : IEquatable<PdfBoundBox>
+    {
+        public double Left { get; }
+
+        public double Top { get; }
+
+        public double Right { get; }
+
+        public double Bottom { get; }
+
+        public PdfBoundBox(double left, double top, double right, double bottom)
+        {
+            /*TODO - Help!
+            //Validator.CheckNotLessThanZero(left, nameof(left));
+            //Validator.CheckNotLessThanZero(top, nameof(top));
+            //Validator.CheckNotLessThanZero(right, nameof(right));
+            //Validator.CheckNotLessThanZero(bottom, nameof(bottom));
+
+            //Validator.CheckOrder(left, right, nameof(left), nameof(right));
+            //Validator.CheckOrder(top, bottom, nameof(top), nameof(bottom));*/
+
+            Left = left;
+            Top = top;
+            Right = right;
+            Bottom = bottom;
+        }
+
+        public static bool operator ==(PdfBoundBox obj1, PdfBoundBox obj2)
+        {
+            return obj1.Equals(obj2);
+        }
+
+        public static bool operator !=(PdfBoundBox obj1, PdfBoundBox obj2)
+        {
+            return !(obj1 == obj2);
+        }
+
+        public bool Equals(PdfBoundBox other)
+        {
+            return Left == other.Left &&
+                   Top == other.Top &&
+                   Right == other.Right &&
+                   Bottom == other.Bottom;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is PdfBoundBox))
+            {
+                return false;
+            }
+
+            var box = (PdfBoundBox)obj;
+
+            return Equals(box);
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = 13;
+            hashCode = hashCode * 7 + Left.GetHashCode();
+            hashCode = hashCode * 7 + Top.GetHashCode();
+            hashCode = hashCode * 7 + Right.GetHashCode();
+            hashCode = hashCode * 7 + Bottom.GetHashCode();
+            return hashCode;
+        }
+    }
 }
